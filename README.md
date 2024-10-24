@@ -1,24 +1,84 @@
+## README
+
 # Rule Engine with Abstract Syntax Tree (AST)
 
-A sophisticated rule engine implementation using Abstract Syntax Tree for dynamic rule creation, combination, and evaluation. This 3-tier application provides a flexible framework for determining user eligibility based on various attributes like age, department, income, and experience.
+### Overview
 
-## Project Overview
+This project consists of a rule engine application that uses SQLite for storing rules and Flask for providing a web interface. The rule engine allows users to create, modify, and evaluate rules based on input data.
 
-The Rule Engine is designed to:
-- Create and manage conditional rules using AST
-- Combine multiple rules efficiently
-- Evaluate rules against user data
-- Provide a simple web interface for rule management
-- Store and retrieve rules using SQLite database
+### Design Choices
 
-## Technical Architecture
+- **SQLite Database**: Chosen for simplicity and ease of use, suitable for lightweight applications.
+- **Flask Web Framework**: Provides a simple interface for interacting with the rule engine via a web browser.
+- **Rule Engine**: Implements a basic Abstract Syntax Tree (AST) to parse and evaluate rules.
 
-### Data Structure
-The system implements an Abstract Syntax Tree (AST) with the following node structure:
-```python
-class Node:
-    def __init__(self, node_type, left=None, right=None, value=None):
-        self.type = node_type    # "operator" or "operand"
-        self.left = left         # Left child node
-        self.right = right       # Right child node
-        self.value = value       # Value for operand nodes
+### Setup Instructions
+
+#### Prerequisites
+
+- Python 3.x
+- SQLite
+- Flask
+
+#### Dependencies
+
+Install the required Python packages using pip:
+
+```bash
+pip install flask
+```
+
+#### Database Setup
+
+1. Ensure the directory `/Users/yanalaraghuvamshireddy/Downloads` exists or modify the path in `setup_database.py` as needed.
+2. Run `setup_database.py` to create the SQLite database and initialize the `rules` table with sample data:
+
+```bash
+python setup_database.py
+```
+
+#### Running the Application
+
+1. Start the Flask application by running `app.py`:
+
+```bash
+python app.py
+```
+
+2. Open your web browser and navigate to `http://127.0.0.1:5000` to access the rule engine interface.
+
+### Usage Instructions
+
+- **Create Rule**: Enter a rule in the text input field and submit to add it to the database.
+- **Evaluate Rule**: Provide data in JSON format to evaluate against the combined rules.
+
+### Docker Setup (Optional)
+
+To run the application in a Docker container, follow these steps:
+
+1. **Dockerfile**: Create a Dockerfile with the following content:
+
+    ```dockerfile
+    FROM python:3.x-slim
+    WORKDIR /app
+    COPY . .
+    RUN pip install flask
+    CMD ["python", "app.py"]
+    ```
+
+2. **Build Docker Image**:
+
+    ```bash
+    docker build -t rule-engine .
+    ```
+
+3. **Run Docker Container**:
+
+    ```bash
+    docker run -p 5000:5000 rule-engine
+    ```
+
+### Additional Notes
+
+- **Security Warning**: The current implementation uses `eval()` for parsing JSON data, which is insecure. Replace it with `json.loads()` in production.
+- **Debugging**: The Flask app runs in debug mode for development purposes. Disable it in production by setting `debug=False` in `app.run()`.
